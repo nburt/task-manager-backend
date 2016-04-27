@@ -7,11 +7,6 @@ repositories {
     mavenCentral()
 }
 
-jar {
-    baseName = 'task-manager'
-    version =  '0.1.0'
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
@@ -26,5 +21,16 @@ dependencies {
     compile('javax.servlet:javax.servlet-api:3.1.0')
     compile('org.postgresql:postgresql:9.4-1200-jdbc41') {
         exclude module: 'slf4j-simple'
+    }
+}
+
+jar {
+    baseName = 'task-manager'
+    version =  '0.1.0'
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'com.nathanaelburt.taskmanager.Application'
+        )
     }
 }
