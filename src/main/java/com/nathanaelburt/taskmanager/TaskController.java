@@ -22,23 +22,9 @@ public class TaskController {
     public ResponseEntity index() {
         Configuration configuration = new Configuration();
         configuration = configuration.configure("hibernate.cfg.xml");
-        URI dbUri;
-        try {
-            dbUri = new URI(System.getenv("DATABASE_URL"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
-        }
-
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":", 2)[1];
-        int port = dbUri.getPort();
-        if (port <= 0) port = 5432;
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + port + dbUri.getPath();
-
-        configuration.setProperty("hibernate.connection.url", dbUrl);
-        configuration.setProperty("hibernate.connection.username", username);
-        configuration.setProperty("hibernate.connection.password", password);
+        configuration.setProperty("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
+        configuration.setProperty("hibernate.connection.username", System.getenv("JDBC_USERNAME"));
+        configuration.setProperty("hibernate.connection.password", System.getenv("JDBC_PASSWORD"));
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -52,23 +38,9 @@ public class TaskController {
     public ResponseEntity showTask(@PathVariable(value = "id") String id) {
         Configuration configuration = new Configuration();
         configuration = configuration.configure("hibernate.cfg.xml");
-        URI dbUri;
-        try {
-            dbUri = new URI(System.getenv("DATABASE_URL"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
-        }
-
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":", 2)[1];
-        int port = dbUri.getPort();
-        if (port <= 0) port = 5432;
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + port + dbUri.getPath();
-
-        configuration.setProperty("hibernate.connection.url", dbUrl);
-        configuration.setProperty("hibernate.connection.username", username);
-        configuration.setProperty("hibernate.connection.password", password);
+        configuration.setProperty("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
+        configuration.setProperty("hibernate.connection.username", System.getenv("JDBC_USERNAME"));
+        configuration.setProperty("hibernate.connection.password", System.getenv("JDBC_PASSWORD"));
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -82,23 +54,9 @@ public class TaskController {
     public ResponseEntity createTask(@ModelAttribute Task task) {
         Configuration configuration = new Configuration();
         configuration = configuration.configure("hibernate.cfg.xml");
-        URI dbUri;
-        try {
-            dbUri = new URI(System.getenv("DATABASE_URL"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
-        }
-
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":", 2)[1];
-        int port = dbUri.getPort();
-        if (port <= 0) port = 5432;
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + port + dbUri.getPath();
-
-        configuration.setProperty("hibernate.connection.url", dbUrl);
-        configuration.setProperty("hibernate.connection.username", username);
-        configuration.setProperty("hibernate.connection.password", password);
+        configuration.setProperty("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
+        configuration.setProperty("hibernate.connection.username", System.getenv("JDBC_USERNAME"));
+        configuration.setProperty("hibernate.connection.password", System.getenv("JDBC_PASSWORD"));
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.openSession();
