@@ -1,0 +1,2 @@
+ALTER TABLE task
+ADD completed boolean NOT NULL DEFAULT(FALSE)

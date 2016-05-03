@@ -25,6 +25,8 @@ public class Task implements Serializable {
 
     private String description;
 
+    private Boolean completed;
+
     public Long getId() {
         return id;
     }
@@ -48,4 +50,13 @@ public class Task implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
+
 }
