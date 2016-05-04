@@ -51,7 +51,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity createTask(@ModelAttribute Task task) {
+    public ResponseEntity createTask(@RequestBody Task task) {
         Configuration configuration = new Configuration();
         configuration = configuration.configure("hibernate.cfg.xml");
         configuration.setProperty("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
@@ -61,7 +61,6 @@ public class TaskController {
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        task.setCompleted(false);
         session.save(task);
 
         session.getTransaction().commit();
