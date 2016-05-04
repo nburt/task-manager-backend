@@ -61,7 +61,7 @@ public class TaskController {
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-
+        task.setCompleted(false);
         session.save(task);
 
         session.getTransaction().commit();
