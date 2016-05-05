@@ -1,87 +1,81 @@
 package com.nathanaelburt.taskmanager.dao;
 
 import java.util.List;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import java.util.ArrayList;
+import javax.persistence.EntityManager;
 import com.nathanaelburt.taskmanager.entity.Task;
 
 public class TaskDao {
 
-    private Session currentSession;
-
-    private Transaction currentTransaction;
-
     public TaskDao() {
     }
 
-    public Session openCurrentSession() {
-        currentSession = getSessionFactory().openSession();
-        return currentSession;
+    public void save(Task task) {
+        EntityManager entityManager;
+
+        try {
+            entityManager = EntityManagerUtil.getEntityManager();
+            entityManager.getTransaction().begin();
+            entityManager.persist(task);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public Session openCurrentSessionwithTransaction() {
-        currentSession = getSessionFactory().openSession();
-        currentTransaction = currentSession.beginTransaction();
-        return currentSession;
-    }
+    public void update(Task task) {
+        EntityManager entityManager;
 
-    public void closeCurrentSession() {
-        currentSession.close();
-    }
-
-    public void closeCurrentSessionwithTransaction() {
-        currentTransaction.commit();
-        currentSession.close();
-    }
-
-    private static SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration();
-        configuration.setProperty("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
-        configuration.setProperty("hibernate.connection.username", System.getenv("JDBC_USERNAME"));
-        configuration.setProperty("hibernate.connection.password", System.getenv("JDBC_PASSWORD"));
-        SessionFactory sessionFactory = configuration.configure().buildSessionFactory();
-        return sessionFactory;
-    }
-
-    public Session getCurrentSession() {
-        return currentSession;
-    }
-
-    public void setCurrentSession(Session currentSession) {
-        this.currentSession = currentSession;
-    }
-
-    public Transaction getCurrentTransaction() {
-        return currentTransaction;
-    }
-
-    public void setCurrentTransaction(Transaction currentTransaction) {
-        this.currentTransaction = currentTransaction;
-    }
-
-    public void save(Task entity) {
-        getCurrentSession().save(entity);
-    }
-
-    public void update(Task entity) {
-        getCurrentSession().update(entity);
+        try {
+            entityManager = EntityManagerUtil.getEntityManager();
+            entityManager.getTransaction().begin();
+            entityManager.merge(task);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public Task findById(Long id) {
-        Task Task = (Task) getCurrentSession().get(Task.class, id);
-        return Task;
+        EntityManager entityManager;
+        Task task = null;
+
+        try {
+            entityManager = EntityManagerUtil.getEntityManager();
+            task = entityManager.find(Task.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return task;
     }
 
-    public void delete(Task entity) {
-        getCurrentSession().delete(entity);
+    public void delete(Task task) {
+        EntityManager entityManager;
+
+        try {
+            entityManager = EntityManagerUtil.getEntityManager();
+            entityManager.getTransaction().begin();
+            entityManager.remove(task);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("unchecked")
     public List<Task> findAll() {
-        List<Task> tasks = (List<Task>) getCurrentSession().createCriteria(Task.class).list();
+        EntityManager entityManager;
+        List<Task> tasks = new ArrayList();
+
+        try {
+            entityManager= EntityManagerUtil.getEntityManager();
+            entityManager.getTransaction().begin();
+            tasks = entityManager.createQuery("Select t from Task t").getResultList();
+            entityManager.getTransaction().commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return tasks;
     }
 
