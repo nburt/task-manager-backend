@@ -1,4 +1,4 @@
-package com.nathanaelburt.taskmanager;
+package com.nathanaelburt.taskmanager.controllers;
 
 import com.nathanaelburt.taskmanager.entity.Task;
 import com.nathanaelburt.taskmanager.service.TaskService;
@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
 import java.util.List;
 
 @CrossOrigin
@@ -36,12 +38,19 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-    @RequestMapping(value ="/tasks/{id}", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity updateTask(@PathVariable(value = "id") Long id, @RequestBody Task task) {
         TaskService taskService = new TaskService();
         task.setId(id);
         taskService.update(task);
         return ResponseEntity.ok(task);
+    }
+
+    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseEntity deleteTask(@PathVariable(value = "id") Long id) {
+        TaskService taskService = new TaskService();
+        taskService.delete(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

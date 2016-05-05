@@ -55,7 +55,7 @@ public class TaskDao {
         try {
             entityManager = EntityManagerUtil.getEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.remove(task);
+            entityManager.remove(entityManager.contains(task) ? task : entityManager.merge(task));
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
